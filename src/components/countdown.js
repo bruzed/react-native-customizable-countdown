@@ -1,7 +1,14 @@
 //import liraries
-import React, {Component} from 'react';
-import {View, Text, StyleSheet, Animated, Easing, AppState} from 'react-native';
-import propTypes from 'prop-types';
+import React, { Component } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Animated,
+  Easing,
+  AppState,
+} from "react-native";
+import propTypes from "prop-types";
 // create a component
 class CountDown extends Component {
   constructor(props) {
@@ -35,21 +42,21 @@ class CountDown extends Component {
 
     this.propStyleForHoursBackground = {
       backgroundColor,
-      marginRight:gap/2,
+      marginRight: gap / 2,
       borderRadius,
       ...hoursBackgroundStyle,
     };
 
     this.propStyleForMinutesBackground = {
       backgroundColor,
-      marginHorizontal: gap/2,
+      marginHorizontal: gap / 2,
       borderRadius,
       ...minutesBackgroundStyle,
     };
 
     this.propStyleForSecondsBackground = {
       backgroundColor,
-      marginHorizontal: gap/2,
+      marginHorizontal: gap / 2,
       borderRadius,
       ...secondsBackgroundStyle,
     };
@@ -96,10 +103,10 @@ class CountDown extends Component {
       ...secondsLabelFontStyle,
     };
 
-    if (labelPosition === 'top') {
-      this.flexDirection = 'column-reverse';
+    if (labelPosition === "top") {
+      this.flexDirection = "column-reverse";
     } else {
-      this.flexDirection = 'column';
+      this.flexDirection = "column";
     }
 
     this.state = {
@@ -113,15 +120,15 @@ class CountDown extends Component {
     this.reset = false;
   }
 
-  calculateSeconds = initialSeconds => initialSeconds % 60;
+  calculateSeconds = (initialSeconds) => initialSeconds % 60;
 
-  calculateMinutes = initialSeconds => Math.floor(initialSeconds / 60) % 60;
+  calculateMinutes = (initialSeconds) => Math.floor(initialSeconds / 60) % 60;
 
-  calculateHours = initialSeconds =>
+  calculateHours = (initialSeconds) =>
     Math.floor(Math.floor(initialSeconds / 60) / 60);
 
   calculateTotalSeconds = () => {
-    const {seconds, minutes, hours} = this.state;
+    const { seconds, minutes, hours } = this.state;
     return seconds + minutes * 60 + hours * 3600;
   };
 
@@ -132,7 +139,7 @@ class CountDown extends Component {
       this.startAnimate();
     }
 
-    const {initialSeconds} = this.state;
+    const { initialSeconds } = this.state;
 
     this.setState(
       {
@@ -140,12 +147,12 @@ class CountDown extends Component {
         minutes: this.calculateMinutes(initialSeconds),
         hours: this.calculateHours(initialSeconds),
       },
-      () => this.setTimer(),
+      () => this.setTimer()
     );
   };
 
-  addSeconds = userSeconds => {
-    let {seconds, minutes, hours} = this.state;
+  addSeconds = (userSeconds) => {
+    let { seconds, minutes, hours } = this.state;
     const initialSeconds = userSeconds + seconds + minutes * 60 + hours * 3600;
 
     this.setState({
@@ -155,8 +162,8 @@ class CountDown extends Component {
     });
   };
 
-  deductSeconds = userSeconds => {
-    let {seconds, minutes, hours} = this.state;
+  deductSeconds = (userSeconds) => {
+    let { seconds, minutes, hours } = this.state;
     const initialSeconds = seconds + minutes * 60 + hours * 3600 - userSeconds;
     this.setState({
       seconds: this.calculateSeconds(initialSeconds),
@@ -167,7 +174,7 @@ class CountDown extends Component {
 
   setTimer = () => {
     this.timer = setInterval(() => {
-      let {seconds, minutes, hours} = this.state;
+      let { seconds, minutes, hours } = this.state;
 
       if (seconds === 0 && minutes !== 0) {
         minutes--;
@@ -184,7 +191,7 @@ class CountDown extends Component {
       } else {
         seconds--;
       }
-      this.setState({seconds, minutes, hours});
+      this.setState({ seconds, minutes, hours });
     }, 1000);
   };
 
@@ -194,7 +201,7 @@ class CountDown extends Component {
         this.props.onChange(
           this.state.hours,
           this.state.minutes,
-          this.state.seconds,
+          this.state.seconds
         );
       }
     }
@@ -214,7 +221,7 @@ class CountDown extends Component {
       duration: 1000,
       easing: Easing.linear,
     }).start(() => {
-      const {seconds, minutes, hours} = this.state;
+      const { seconds, minutes, hours } = this.state;
       if ((seconds || minutes || hours) && !this.props.pause)
         this.startAnimate();
     });
@@ -235,7 +242,7 @@ class CountDown extends Component {
         inputRange: [0, 1],
         outputRange: [initialColor, animateColor],
       });
-    } else return animateColor? animateColor: initialColor;
+    } else return animateColor ? animateColor : initialColor;
   };
 
   animateDigitColor = (initialColor, animateColor) => {
@@ -244,7 +251,7 @@ class CountDown extends Component {
         inputRange: [0, 1],
         outputRange: [initialColor, animateColor],
       });
-    } else return animateColor? animateColor: initialColor;
+    } else return animateColor ? animateColor : initialColor;
   };
 
   animateTextColor = (initialColor, animateColor) => {
@@ -253,24 +260,24 @@ class CountDown extends Component {
         inputRange: [0, 1],
         outputRange: [initialColor, animateColor],
       });
-    } else return animateColor? animateColor: initialColor;
+    } else return animateColor ? animateColor : initialColor;
   };
 
-  _handleAppStateChange = nextAppState => {
+  _handleAppStateChange = (nextAppState) => {
     if (
       this.appState.match(/inactive|background/) &&
-      nextAppState === 'active'
+      nextAppState === "active"
     ) {
-      console.log('App has come to the foreground!');
+      console.log("App has come to the foreground!");
 
       if (!this.props.pause && this.props.activeInBackground) {
         const difference = Date.now() - this.wentBackAt;
 
-        const {seconds, minutes, hours} = this.state;
+        const { seconds, minutes, hours } = this.state;
 
         const initialSeconds = Math.max(
           seconds + minutes * 60 + hours * 60 - Math.round(difference / 1000),
-          0,
+          0
         );
 
         this.setState({
@@ -282,7 +289,7 @@ class CountDown extends Component {
     } else {
       if (!this.props.pause && this.props.activeInBackground)
         this.wentBackAt = Date.now();
-      console.log('App goes to background!');
+      console.log("App goes to background!");
     }
     this.appState = nextAppState;
   };
@@ -295,16 +302,20 @@ class CountDown extends Component {
     // if (this.props.endingAlert?.animate)
     //   this.alertAnimate();
 
-    AppState.addEventListener('change', this._handleAppStateChange);
+    this.appStateSubscription = AppState.addEventListener(
+      "change",
+      this._handleAppStateChange
+    );
   }
 
   componentWillUnmount() {
     clearInterval(this.timer);
-    AppState.removeEventListener('change', this._handleAppStateChange);
+    // AppState.removeEventListener('change', this._handleAppStateChange);
+    this.appStateSubscription.remove();
   }
 
   render() {
-    const {seconds, minutes, hours} = this.state;
+    const { seconds, minutes, hours } = this.state;
     const {
       propStyleForHoursBackground,
       propStyleForMinutesBackground,
@@ -330,7 +341,7 @@ class CountDown extends Component {
       animateSeparator,
       separatorStyle,
       endingAlert,
-      pause
+      pause,
     } = this.props;
 
     const opacity = this.animatedValue.interpolate({
@@ -339,18 +350,13 @@ class CountDown extends Component {
     });
 
     if (endingAlert?.initiateAt >= this.calculateTotalSeconds()) {
-      if(!pause)
-        this.alertAnimate();
-      const {
-        backgroundColor,
-        digitColor,
-        labelColor        
-      } = endingAlert;               
+      if (!pause) this.alertAnimate();
+      const { backgroundColor, digitColor, labelColor } = endingAlert;
 
       //console.log(animateBackgroundColor);
 
       return (
-        <View style={[styles.container, {width, height}]}>
+        <View style={[styles.container, { width, height }]}>
           {(hours > 0 || showHours) && (
             <Animated.View
               style={[
@@ -360,15 +366,36 @@ class CountDown extends Component {
                   flexDirection,
                   backgroundColor: this.animateBackgroundColor(
                     this.propStyleForHoursBackground.backgroundColor,
-                    backgroundColor,
+                    backgroundColor
                   ),
                 },
-              ]}>
-              <Animated.Text style={[propStyleForHoursDigit, {color: this.animateDigitColor(propStyleForHoursDigit.color, digitColor)}]}>
-                {hours < 10 ? '0' + hours : hours}
+              ]}
+            >
+              <Animated.Text
+                style={[
+                  propStyleForHoursDigit,
+                  {
+                    color: this.animateDigitColor(
+                      propStyleForHoursDigit.color,
+                      digitColor
+                    ),
+                  },
+                ]}
+              >
+                {hours < 10 ? "0" + hours : hours}
               </Animated.Text>
               {enableLabel && (
-                <Animated.Text style={[propStyleForHoursText, {color: this.animateTextColor(propStyleForHoursText.color, labelColor)}]}>
+                <Animated.Text
+                  style={[
+                    propStyleForHoursText,
+                    {
+                      color: this.animateTextColor(
+                        propStyleForHoursText.color,
+                        labelColor
+                      ),
+                    },
+                  ]}
+                >
                   {hoursLabel}
                 </Animated.Text>
               )}
@@ -379,14 +406,15 @@ class CountDown extends Component {
             <Animated.Text
               style={[
                 {
-                  textAlignVertical: 'center',
+                  textAlignVertical: "center",
                   fontSize: 30,
                   opacity: animateSeparator ? opacity : 1,
                 },
                 separatorStyle,
-              ]}>
-              {' '}
-              :{' '}
+              ]}
+            >
+              {" "}
+              :{" "}
             </Animated.Text>
           )}
 
@@ -395,16 +423,40 @@ class CountDown extends Component {
               style={[
                 styles.minutesBackground,
                 propStyleForMinutesBackground,
-                {flexDirection, backgroundColor: this.animateBackgroundColor(
-                  this.propStyleForMinutesBackground.backgroundColor,
-                  backgroundColor,
-                ),},
-              ]}>
-              <Animated.Text style={[propStyleForMinutesDigit, {color: this.animateDigitColor(this.propStyleForMinutesDigit.color, digitColor)}]}>
-                {minutes < 10 ? '0' + minutes : minutes}
+                {
+                  flexDirection,
+                  backgroundColor: this.animateBackgroundColor(
+                    this.propStyleForMinutesBackground.backgroundColor,
+                    backgroundColor
+                  ),
+                },
+              ]}
+            >
+              <Animated.Text
+                style={[
+                  propStyleForMinutesDigit,
+                  {
+                    color: this.animateDigitColor(
+                      this.propStyleForMinutesDigit.color,
+                      digitColor
+                    ),
+                  },
+                ]}
+              >
+                {minutes < 10 ? "0" + minutes : minutes}
               </Animated.Text>
               {enableLabel && (
-                <Animated.Text style={[propStyleForMinutesText, {color: this.animateTextColor(propStyleForMinutesText.color, labelColor)}]}>
+                <Animated.Text
+                  style={[
+                    propStyleForMinutesText,
+                    {
+                      color: this.animateTextColor(
+                        propStyleForMinutesText.color,
+                        labelColor
+                      ),
+                    },
+                  ]}
+                >
                   {minutesLabel}
                 </Animated.Text>
               )}
@@ -415,14 +467,15 @@ class CountDown extends Component {
             <Animated.Text
               style={[
                 {
-                  textAlignVertical: 'center',
+                  textAlignVertical: "center",
                   fontSize: 30,
                   opacity: animateSeparator ? opacity : 1,
                 },
                 separatorStyle,
-              ]}>
-              {' '}
-              :{' '}
+              ]}
+            >
+              {" "}
+              :{" "}
             </Animated.Text>
           )}
 
@@ -430,16 +483,40 @@ class CountDown extends Component {
             style={[
               styles.secondsBackground,
               propStyleForSecondsBackground,
-              {flexDirection, backgroundColor: this.animateBackgroundColor(
-                this.propStyleForSecondsBackground.backgroundColor,
-                backgroundColor,
-              )},
-            ]}>
-            <Animated.Text style={[propStyleForSecondsDigit, {color: this.animateDigitColor(this.propStyleForSecondsDigit.color, digitColor)}]}>
-              {seconds < 10 ? '0' + seconds : seconds}
+              {
+                flexDirection,
+                backgroundColor: this.animateBackgroundColor(
+                  this.propStyleForSecondsBackground.backgroundColor,
+                  backgroundColor
+                ),
+              },
+            ]}
+          >
+            <Animated.Text
+              style={[
+                propStyleForSecondsDigit,
+                {
+                  color: this.animateDigitColor(
+                    this.propStyleForSecondsDigit.color,
+                    digitColor
+                  ),
+                },
+              ]}
+            >
+              {seconds < 10 ? "0" + seconds : seconds}
             </Animated.Text>
             {enableLabel && (
-              <Animated.Text style={[propStyleForSecondsText, {color: this.animateTextColor(propStyleForSecondsText.color, labelColor)}]}>
+              <Animated.Text
+                style={[
+                  propStyleForSecondsText,
+                  {
+                    color: this.animateTextColor(
+                      propStyleForSecondsText.color,
+                      labelColor
+                    ),
+                  },
+                ]}
+              >
                 {secondsLabel}
               </Animated.Text>
             )}
@@ -448,16 +525,17 @@ class CountDown extends Component {
       );
     } else
       return (
-        <View style={[styles.container, {width, height}]}>
+        <View style={[styles.container, { width, height }]}>
           {(hours > 0 || showHours) && (
             <View
               style={[
                 styles.hoursBackground,
                 propStyleForHoursBackground,
-                {flexDirection},
-              ]}>
+                { flexDirection },
+              ]}
+            >
               <Text style={[propStyleForHoursDigit]}>
-                {hours < 10 ? '0' + hours : hours}
+                {hours < 10 ? "0" + hours : hours}
               </Text>
               {enableLabel && (
                 <Text style={propStyleForHoursText}>{hoursLabel}</Text>
@@ -469,14 +547,15 @@ class CountDown extends Component {
             <Animated.Text
               style={[
                 {
-                  textAlignVertical: 'center',
+                  textAlignVertical: "center",
                   fontSize: 30,
                   opacity: animateSeparator ? opacity : 1,
                 },
                 separatorStyle,
-              ]}>
-              {' '}
-              :{' '}
+              ]}
+            >
+              {" "}
+              :{" "}
             </Animated.Text>
           )}
 
@@ -485,10 +564,11 @@ class CountDown extends Component {
               style={[
                 styles.minutesBackground,
                 propStyleForMinutesBackground,
-                {flexDirection},
-              ]}>
+                { flexDirection },
+              ]}
+            >
               <Text style={propStyleForMinutesDigit}>
-                {minutes < 10 ? '0' + minutes : minutes}
+                {minutes < 10 ? "0" + minutes : minutes}
               </Text>
               {enableLabel && (
                 <Text style={propStyleForMinutesText}>{minutesLabel}</Text>
@@ -500,14 +580,15 @@ class CountDown extends Component {
             <Animated.Text
               style={[
                 {
-                  textAlignVertical: 'center',
+                  textAlignVertical: "center",
                   fontSize: 30,
                   opacity: animateSeparator ? opacity : 1,
                 },
                 separatorStyle,
-              ]}>
-              {' '}
-              :{' '}
+              ]}
+            >
+              {" "}
+              :{" "}
             </Animated.Text>
           )}
 
@@ -515,10 +596,11 @@ class CountDown extends Component {
             style={[
               styles.secondsBackground,
               propStyleForSecondsBackground,
-              {flexDirection},
-            ]}>
+              { flexDirection },
+            ]}
+          >
             <Text style={propStyleForSecondsDigit}>
-              {seconds < 10 ? '0' + seconds : seconds}
+              {seconds < 10 ? "0" + seconds : seconds}
             </Text>
             {enableLabel && (
               <Text style={propStyleForSecondsText}>{secondsLabel}</Text>
@@ -532,25 +614,25 @@ class CountDown extends Component {
 // define your styles
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
 
   hoursBackground: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   minutesBackground: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   secondsBackground: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
@@ -577,7 +659,7 @@ CountDown.propTypes = {
   hoursLabelFontStyle: propTypes.object,
   minutesLabelFontStyle: propTypes.object,
   secondsLabelFontStyle: propTypes.object,
-  labelPosition: propTypes.oneOf(['top', 'bottom']),
+  labelPosition: propTypes.oneOf(["top", "bottom"]),
   enableLabel: propTypes.bool,
   hoursLabel: propTypes.string,
   minutesLabel: propTypes.string,
@@ -601,25 +683,25 @@ CountDown.propTypes = {
 
 CountDown.defaultProps = {
   initialSeconds: 0,
-  backgroundColor: 'white',
-  digitColor: 'black',
+  backgroundColor: "white",
+  digitColor: "black",
   gap: 5,
   width: 200,
   height: 80,
   borderRadius: 5,
   digitFontSize: 18,
-  labelColor: 'black',
+  labelColor: "black",
   labelFontSize: 10,
-  labelPosition: 'bottom',
-  hoursLabel: 'Hours',
-  minutesLabel: 'Minutes',
-  secondsLabel: 'Seconds',
+  labelPosition: "bottom",
+  hoursLabel: "Hours",
+  minutesLabel: "Minutes",
+  secondsLabel: "Seconds",
   showHours: true,
   showMinutes: true,
   showSeparator: false,
   animateSeparator: false,
   pause: false,
-  activeInBackground: true  
+  activeInBackground: true,
 };
 //make this component available to the app
 export default CountDown;
